@@ -83,28 +83,70 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Clean and Install dependencies
+      - name: Install dependencies
         run: |
-          echo "=== Installing dependencies in apps/mobile ==="
-          cd apps/mobile
-          rm -rf node_modules package-lock.json
+          echo "=== Installing ALL dependencies (root + workspaces) ==="
           npm install --legacy-peer-deps
           echo ""
-          echo "=== Verifying installation ==="
+          echo "=== Checking for gradle-plugin ==="
+          echo "Root node_modules/@react-native:"
+          ls -la node_modules/@react-native/ 2>/dev/null || echo "Not in root"
+          echo ""
+          echo "Checking apps/mobile:"
+          ls -la apps/mobile/node_modules/@react-native/ 2>/dev/null || echo "Not in apps/mobile"
 
-      - name: Verify gradle-plugin exists
+      - name: Verify gradle-plugin location
+        id: plugin-check
         run: |
-          echo "=== Checking for @react-native/gradle-plugin ==="
-          cd apps/mobile
-          if [ -d "node_modules/@react-native/gradle-plugin" ]; then
-            echo "✅ gradle-plugin found!"
-            ls -la node_modules/@react-native/gradle-plugin/
+          echo "=== Finding gradle-plugin ==="
+          GRADLE_PLUGIN=$(find . -path "*/node_modules/@react-native/gradle-plugin" -type d 2>/dev/null | head -1)
+          if [ -n "$GRADLE_PLUGIN" ]; then
+            echo "✅ Found at: $GRADLE_PLUGIN"
+            echo "PLUGIN_PATH=$GRADLE_PLUGIN" >> $GITHUB_OUTPUT
+            ls -la "$GRADLE_PLUGIN"
           else
-            echo "❌ gradle-plugin NOT found"
-            echo "Searching..."
-            find node_modules -name "gradle-plugin" -type d
+            echo "❌ gradle-plugin not found anywhere!"
+            find . -name "gradle-plugin" -type d 2>/dev/null
             exit 1
           fi
+
+      - name: Update settings.gradle with correct path
+        run: |
+          PLUGIN_PATH="${{ steps.plugin-check.outputs.PLUGIN_PATH }}"
+          echo "=== Updating settings.gradle to use: $PLUGIN_PATH ==="
+          # Calculate relative path from android directory to gradle-plugin
+          cd apps/mobile/android
+          RELATIVE_PATH=$(realpath --relative-to=. "../../../$PLUGIN_PATH")
+          echo "Relative path from android: $RELATIVE_PATH"
+
+          # Create new settings.gradle
+          cat > settings.gradle << 'SETTINGS_GRADLE'
+          pluginManagement {
+          SETTINGS_GRADLE
+          echo "    includeBuild(\"../$RELATIVE_PATH\")" >> settings.gradle
+          cat >> settings.gradle << 'SETTINGS_GRADLE'
+              repositories {
+                  gradlePluginPortal()
+                  google()
+                  mavenCentral()
+              }
+          }
+
+          plugins {
+              id("com.facebook.react.settings")
+          }
+
+          extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
+              ex.autolinkLibrariesFromCommand()
+          }
+
+          rootProject.name = 'TodoList'
+
+          include ':app'
+          SETTINGS_GRADLE
+
+          echo "=== New settings.gradle ==="
+          cat settings.gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x apps/mobile/android/gradlew
@@ -113,7 +155,7 @@ jobs:
         run: |
           cd apps/mobile/android
           echo "=== Building Debug APK ==="
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon 2>&1 | head -100
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
