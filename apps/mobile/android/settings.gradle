@@ -1,5 +1,3 @@
-rootProject.name = 'TodoList'
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -11,6 +9,8 @@ pluginManagement {
 plugins {
     id("com.facebook.react.settings")
 }
+
+rootProject.name = 'TodoList'
 
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
     ex.autolinkLibrariesFromCommand()
