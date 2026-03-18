@@ -1,6 +1,5 @@
 rootProject.name = 'TodoList'
 
-// React Native Gradle Plugin - handles autolinking in 0.84+
 pluginManagement {
     repositories {
         gradlePluginPortal()
