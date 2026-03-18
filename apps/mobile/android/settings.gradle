@@ -6,14 +6,11 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'TodoList'
-
-// Include React Native Gradle Plugin - MUST come before plugins block
 includeBuild("../node_modules/@react-native/gradle-plugin")
 
-plugins {
-    id("com.facebook.react.settings")
-}
+rootProject.name = 'TodoList'
+
+apply plugin: "com.facebook.react.settings"
 
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
     ex.autolinkLibrariesFromCommand()
