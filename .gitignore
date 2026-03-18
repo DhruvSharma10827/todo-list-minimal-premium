@@ -1,0 +1,71 @@
+# dependencies
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+.turbo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# React Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Android
+*.iml
+.gradle
+local.properties
+/android/app/build
+/android/.idea
+/android/.gradle
+/android/build
+/android/app/release
+
+# iOS
+/ios/Pods
+/ios/build
+
+# Metro
+.metro-health-check*
+
+# Testing
+.jest-cache
+.detox
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
