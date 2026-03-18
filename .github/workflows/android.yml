@@ -83,32 +83,60 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install dependencies with npm
+      - name: Install dependencies
         run: |
+          echo "=== Installing dependencies in apps/mobile ==="
           cd apps/mobile
-          npm install
+          npm install --legacy-peer-deps
+          echo ""
+          echo "=== Checking node_modules structure ==="
+          echo "Contents of node_modules/@react-native:"
+          ls -la node_modules/@react-native/ 2>/dev/null || echo "Directory not found"
+          echo ""
+          echo "Checking gradle-plugin location:"
+          find node_modules -name "gradle-plugin" -type d 2>/dev/null | head -10
+          echo ""
+          echo "Checking react-native package:"
+          ls -la node_modules/react-native/ 2>/dev/null | head -10
+
+      - name: Debug - Verify gradle-plugin exists
+        run: |
+          echo "=== Full path check ==="
+          cd apps/mobile
+          if [ -d "node_modules/@react-native/gradle-plugin" ]; then
+            echo "✅ gradle-plugin found at node_modules/@react-native/gradle-plugin"
+            ls -la node_modules/@react-native/gradle-plugin/
+          else
+            echo "❌ gradle-plugin NOT found"
+            echo "Searching for it..."
+            find . -path "*/node_modules/*" -name "*gradle-plugin*" -type d 2>/dev/null
+          fi
 
       - name: Grant execute permission for gradlew
         run: chmod +x apps/mobile/android/gradlew
 
-      - name: Build Debug APK
+      - name: Build Debug APK with verbose logging
         run: |
           cd apps/mobile/android
-          ./gradlew assembleDebug --no-daemon
+          echo "=== Running Gradle build with info logging ==="
+          ./gradlew assembleDebug --no-daemon --info 2>&1 | head -200
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: todo-list-debug-apk
           path: apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Build Release APK
+        if: success()
         run: |
           cd apps/mobile/android
           ./gradlew assembleRelease --no-daemon
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: todo-list-release-apk
           path: apps/mobile/android/app/build/outputs/apk/release/app-release.apk
