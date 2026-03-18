@@ -1,5 +1,5 @@
 pluginManagement {
-    includeBuild("../node_modules/@react-native/gradle-plugin")
+    includeBuild("../../../node_modules/@react-native/gradle-plugin")
     repositories {
         gradlePluginPortal()
         google()
@@ -16,5 +16,8 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
 }
 
 rootProject.name = 'TodoList'
+
+// Include for build.gradle plugin resolution
+includeBuild("../../../node_modules/@react-native/gradle-plugin")
 
 include ':app'
