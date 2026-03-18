@@ -93,39 +93,11 @@ jobs:
           echo ""
           if [ -d "node_modules/@react-native/gradle-plugin" ]; then
             echo "✅ Found at root/node_modules/@react-native/gradle-plugin"
-            ls -la node_modules/@react-native/gradle-plugin/
           else
             echo "❌ NOT found!"
             find . -name "gradle-plugin" -type d 2>/dev/null
+            exit 1
           fi
-
-      - name: Create settings.gradle with correct path
-        run: |
-          cd apps/mobile/android
-          cat > settings.gradle << 'EOF'
-          pluginManagement {
-              includeBuild("../../../node_modules/@react-native/gradle-plugin")
-              repositories {
-                  gradlePluginPortal()
-                  google()
-                  mavenCentral()
-              }
-          }
-
-          plugins {
-              id("com.facebook.react.settings")
-          }
-
-          extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
-              ex.autolinkLibrariesFromCommand()
-          }
-
-          rootProject.name = 'TodoList'
-
-          include ':app'
-          EOF
-          echo "=== settings.gradle ==="
-          cat settings.gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x apps/mobile/android/gradlew
@@ -133,6 +105,9 @@ jobs:
       - name: Build Debug APK
         run: |
           cd apps/mobile/android
+          echo "=== settings.gradle ==="
+          cat settings.gradle
+          echo ""
           echo "=== Building Debug APK ==="
           ./gradlew assembleDebug --no-daemon
 
