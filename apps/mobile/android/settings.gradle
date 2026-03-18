@@ -1,5 +1,5 @@
 rootProject.name = 'TodoList'
-include ':app'
+apply from: file("../../../node_modules/.bun/@react-native+gradle-plugin@0.84.1/node_modules/@react-native/scripts/reactnative.gradle")
 
-// React Native Gradle Plugin
-includeBuild('../../node_modules/.bun/@react-native+gradle-plugin@0.84.1/node_modules/@react-native/gradle-plugin')
+include ':app'
+includeBuild('../../../node_modules/.bun/@react-native+gradle-plugin@0.84.1/node_modules/@react-native/gradle-plugin')
