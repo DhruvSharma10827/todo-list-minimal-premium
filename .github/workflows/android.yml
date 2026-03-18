@@ -74,11 +74,6 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
@@ -88,8 +83,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install dependencies
-        run: bun install
+      - name: Install dependencies with npm
+        run: |
+          cd apps/mobile
+          npm install
 
       - name: Grant execute permission for gradlew
         run: chmod +x apps/mobile/android/gradlew
