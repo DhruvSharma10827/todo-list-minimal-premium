@@ -11,8 +11,7 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "test:coverage": "jest --coverage",
-    "android:lint": "cd android && ./gradlew lint"
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.84.1",

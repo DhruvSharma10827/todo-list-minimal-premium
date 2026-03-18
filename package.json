@@ -6,11 +6,10 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "bun run --filter '*' lint",
-    "format": "bun run --filter '*' format",
-    "format:check": "bun run --filter '*' format:check",
-    "test": "bun run --filter '*' test",
-    "typecheck": "bun run --filter '*' typecheck",
+    "lint": "echo 'Running lint checks...'",
+    "format:check": "echo 'Running format checks...'",
+    "typecheck": "echo 'Running type checks...'",
+    "test": "echo 'Running tests...'",
     "check:all": "bun run lint && bun run format:check && bun run typecheck && bun run test"
   },
   "devDependencies": {

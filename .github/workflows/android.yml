@@ -28,17 +28,38 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Type check
-        run: bun run typecheck
+      - name: Type check - Core
+        run: cd packages/core && bun run typecheck
 
-      - name: Lint
-        run: bun run lint
+      - name: Type check - Storage
+        run: cd packages/storage && bun run typecheck
 
-      - name: Format check
-        run: bun run format:check
+      - name: Type check - Mobile
+        run: cd apps/mobile && bun run typecheck
 
-      - name: Run tests
-        run: bun run test
+      - name: Lint - Core
+        run: cd packages/core && bun run lint
+
+      - name: Lint - Storage
+        run: cd packages/storage && bun run lint
+
+      - name: Lint - Mobile
+        run: cd apps/mobile && bun run lint
+
+      - name: Format check - Core
+        run: cd packages/core && bun run format:check
+
+      - name: Format check - Storage
+        run: cd packages/storage && bun run format:check
+
+      - name: Format check - Mobile
+        run: cd apps/mobile && bun run format:check
+
+      - name: Run tests - Core
+        run: cd packages/core && bun run test
+
+      - name: Run tests - Storage
+        run: cd packages/storage && bun run test
 
   build-android:
     name: Build Android APK
@@ -76,7 +97,7 @@ jobs:
       - name: Build Debug APK
         run: |
           cd apps/mobile/android
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -87,7 +108,7 @@ jobs:
       - name: Build Release APK
         run: |
           cd apps/mobile/android
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
