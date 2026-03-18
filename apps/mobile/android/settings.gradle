@@ -7,11 +7,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'TodoList'
-
-// Include build for plugin resolution in both settings and build.gradle
-includeBuild("../../../node_modules/@react-native/gradle-plugin")
-
 plugins {
     id("com.facebook.react.settings")
 }
@@ -19,5 +14,7 @@ plugins {
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
     ex.autolinkLibrariesFromCommand()
 }
+
+rootProject.name = 'TodoList'
 
 include ':app'
