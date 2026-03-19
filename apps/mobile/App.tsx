@@ -6,10 +6,9 @@
  */
 
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { PaperProvider, MD3LightTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TodoProvider } from './src/context';
 import { TodoListScreen } from './src/components';
 import { initializeTodoRepository } from './src/services';
@@ -46,19 +45,17 @@ const theme = {
 
 function App(): React.ReactElement {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <PaperProvider theme={theme}>
-          <StatusBar
-            barStyle="dark-content"
-            backgroundColor={theme.colors.background}
-          />
-          <TodoProvider repository={repository}>
-            <TodoListScreen />
-          </TodoProvider>
-        </PaperProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor={theme.colors.background}
+        />
+        <TodoProvider repository={repository}>
+          <TodoListScreen />
+        </TodoProvider>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }
 
