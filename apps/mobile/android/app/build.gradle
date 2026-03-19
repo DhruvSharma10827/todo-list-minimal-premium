@@ -5,9 +5,19 @@ plugins {
 }
 
 /**
+ * Monorepo support: Calculate the monorepo root directory.
+ * rootDir = apps/mobile/android/ (Gradle root, defined by settings.gradle location)
+ * 3 levels up to reach monorepo root: android -> mobile -> apps -> repo
+ */
+def monorepoRoot = rootDir.getParentFile().getParentFile().getParentFile()
+
+/**
  * This is the configuration block to customize your React Native Android app.
  */
 react {
+    // Override paths for monorepo - react-native is hoisted to root node_modules
+    reactNativeDir = new File(monorepoRoot, "node_modules/react-native")
+    codegenDir = new File(monorepoRoot, "node_modules/@react-native/codegen")
     /* Autolinking */
     autolinkLibrariesWithApp()
 }
